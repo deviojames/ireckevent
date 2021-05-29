@@ -16,11 +16,14 @@ const initialState = {
     week: [],
     later: [],
   },
+  selectedEventData: {},
   status: {
     eventData: 'idle',
+    selectedEventData: 'idle',
   },
   error: {
     eventData: '',
+    selectedEventData: '',
   },
 };
 
@@ -36,15 +39,39 @@ export const fetchEvent = createAsyncThunk('event/fetchEvent', async () => {
   return response;
 });
 
+export const fetchSelectedEvent = createAsyncThunk(
+  'event/fetchSelectedEvent',
+  async ({eventId}) => {
+    const requestUrl = `/api/event/${eventId}`;
+
+    if (!requestUrl) {
+      return null;
+    }
+
+    const response = await Axios.get(requestUrl);
+    return response;
+  },
+);
+
 // -- MAIN SLICE
 export const eventSlice = createSlice({
   name: 'event',
   initialState,
   reducers: {
     resetEventSlice: state => {
-      state.eventData = [];
+      state.eventData = {
+        all: [],
+        today: [],
+        week: [],
+        later: [],
+      };
       state.status.eventData = 'idle';
       state.error.eventData = '';
+    },
+    resetSelectedEventData: state => {
+      state.selectedEventData = [];
+      state.status.selectedEventData = 'idle';
+      state.error.selectedEventData = '';
     },
   },
   extraReducers: {
@@ -73,6 +100,17 @@ export const eventSlice = createSlice({
       state.status.eventData = 'failed';
       state.error.eventData = action.error.message;
     },
+    [fetchSelectedEvent.pending]: (state, action) => {
+      state.status.selectedEventData = 'loading';
+    },
+    [fetchSelectedEvent.fulfilled]: (state, action) => {
+      state.status.selectedEventData = 'succeeded';
+      state.selectedEventData = action.payload.data.event;
+    },
+    [fetchSelectedEvent.rejected]: (state, action) => {
+      state.status.selectedEventData = 'failed';
+      state.error.selectedEventData = action.error.message;
+    },
   },
 });
 
@@ -83,3 +121,6 @@ export default eventSlice.reducer;
 
 export const selectEventDataStatus = state => state.event.status.eventData;
 export const selectEventData = state => state.event.eventData;
+export const selectSelectedEventDataStatus = state =>
+  state.event.status.eventData;
+export const selectSelectedEventData = state => state.event.selectedEventData;
