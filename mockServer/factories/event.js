@@ -10,7 +10,7 @@ export default Factory.extend({
 
   dateTime() {
     return moment()
-      .add(faker.random.number({min: 0, max: 15}), 'day')
+      .add(faker.datatype.number({min: 0, max: 15}), 'day')
       .toISOString();
   },
   description() {
