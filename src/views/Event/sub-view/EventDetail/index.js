@@ -1,4 +1,3 @@
-import PropsTypes from 'prop-types';
 import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import {ScrollView, ActivityIndicator} from 'react-native';
@@ -59,6 +58,8 @@ const ActionButtonContainer = styled.View`
   margin-top: 10px;
 `;
 
+// -- MAIN
+
 const EventDetail = ({route}) => {
   const {eventId} = route.params;
   const dispatch = useDispatch();
@@ -77,7 +78,7 @@ const EventDetail = ({route}) => {
 
   return (
     <Container>
-      <EventImage source={{uri: image ? url.protocolPrefix(image) : ''}} />
+      {image ? <EventImage source={{uri: url.protocolPrefix(image)}} /> : null}
       <ActionButtonContainer>
         <ActionButton status={status} />
       </ActionButtonContainer>
