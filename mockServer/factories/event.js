@@ -5,7 +5,7 @@ import {createArrayWithNumbers, randInt} from '../uitils';
 
 export default Factory.extend({
   title() {
-    return faker.lorem.slug();
+    return faker.lorem.words();
   },
 
   dateTime() {
