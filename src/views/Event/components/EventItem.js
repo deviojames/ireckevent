@@ -26,12 +26,6 @@ const AttendeesContainer = styled.View`
   margin-left: 10px;
 `;
 
-const ActionContainer = styled.View`
-  flex-direction: row;
-
-  justify-content: flex-start;
-`;
-
 const Title = styled.Text`
   font-size: 18px;
   font-weight: 600;
@@ -60,11 +54,11 @@ const Thumbnail = styled.Image`
 `;
 
 // -- MAIN
-const EventItem = ({eventData}) => {
-  const {id, title, dateTime, image, members, status} = eventData;
+const EventItem = ({eventData, onPressEventItem}) => {
+  const {title, dateTime, image, members, status} = eventData;
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => onPressEventItem()}>
       <Container>
         <DateOverImage
           imageUrl={url.protocolPrefix(image)}
@@ -87,13 +81,11 @@ const EventItem = ({eventData}) => {
               <ExtraAttendees>+{members.length - 3} others</ExtraAttendees>
             ) : null}
           </AttendeesContainer>
-          <ActionContainer>
-            <ActionButton
-              status={status}
-              // unattended={}
-              // attend={}
-            />
-          </ActionContainer>
+          <ActionButton
+            status={status}
+            // unattended={}
+            // attend={}
+          />
         </InfoContainer>
       </Container>
     </TouchableOpacity>
@@ -112,6 +104,7 @@ EventItem.propTypes = {
     }),
   ),
   status: PropTypes.string,
+  onPressEventItem: PropTypes.func,
 };
 
 EventItem.defaultProps = {
@@ -121,6 +114,7 @@ EventItem.defaultProps = {
   image: '',
   members: [],
   status: 'none',
+  onPressEventItem: () => {},
 };
 
 export default EventItem;
