@@ -1,21 +1,9 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Axios from 'axios';
-import moment from 'moment';
-
-moment.locale('en', {
-  week: {
-    dow: 1, // set Monday is the first day of the week.
-  },
-});
 
 // -- CONSTANT
 const initialState = {
-  eventData: {
-    all: [],
-    today: [],
-    week: [],
-    later: [],
-  },
+  eventData: [],
   selectedEventData: {},
   status: {
     eventData: 'idle',
@@ -53,6 +41,34 @@ export const fetchSelectedEvent = createAsyncThunk(
   },
 );
 
+export const fetchJoinEvent = createAsyncThunk(
+  'event/fetchJoinEvent',
+  async ({eventId}) => {
+    const requestUrl = `/api/event/${eventId}/join`;
+
+    if (!requestUrl) {
+      return null;
+    }
+
+    const response = await Axios.get(requestUrl);
+    return response;
+  },
+);
+
+export const fetchLeaveEvent = createAsyncThunk(
+  'event/fetchLeaveEvent',
+  async ({eventId}) => {
+    const requestUrl = `/api/event/${eventId}/join`;
+
+    if (!requestUrl) {
+      return null;
+    }
+
+    const response = await Axios.get(requestUrl);
+    return response;
+  },
+);
+
 // -- MAIN SLICE
 export const eventSlice = createSlice({
   name: 'event',
@@ -80,21 +96,7 @@ export const eventSlice = createSlice({
     },
     [fetchEvent.fulfilled]: (state, action) => {
       state.status.eventData = 'succeeded';
-      state.eventData.all = action.payload.data;
-
-      state.eventData.today = action.payload.data.filter(event =>
-        moment(event.dateTime).isSame(moment(), 'day'),
-      );
-      state.eventData.week = action.payload.data.filter(
-        event =>
-          moment(event.dateTime).isSame(moment(), 'week') &&
-          moment(event.dateTime).isSame(moment(), 'day') === false,
-      );
-      state.eventData.later = action.payload.data.filter(
-        event =>
-          moment(event.dateTime).isSame(moment(), 'day') === false &&
-          moment(event.dateTime).isSame(moment(), 'week') === false,
-      );
+      state.eventData = action.payload.data;
     },
     [fetchEvent.rejected]: (state, action) => {
       state.status.eventData = 'failed';
@@ -111,6 +113,12 @@ export const eventSlice = createSlice({
       state.status.selectedEventData = 'failed';
       state.error.selectedEventData = action.error.message;
     },
+    [fetchJoinEvent.pending]: (state, action) => {},
+    [fetchJoinEvent.fulfilled]: (state, action) => {},
+    [fetchJoinEvent.rejected]: (state, action) => {},
+    [fetchLeaveEvent.pending]: (state, action) => {},
+    [fetchLeaveEvent.fulfilled]: (state, action) => {},
+    [fetchLeaveEvent.rejected]: (state, action) => {},
   },
 });
 
