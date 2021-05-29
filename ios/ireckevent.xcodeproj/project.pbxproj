@@ -145,7 +145,6 @@
 				54D18BFEAF68EFE81C674D7A /* Pods-ireckevent-ireckeventTests.debug.xcconfig */,
 				8F1A5E75B9E661606A43914F /* Pods-ireckevent-ireckeventTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

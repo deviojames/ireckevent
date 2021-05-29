@@ -12,6 +12,9 @@ target 'ireckevent' do
     :hermes_enabled => false
   )
 
+   # 3rd party
+   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'ireckeventTests' do
     inherit! :complete
     # Pods for testing
