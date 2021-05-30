@@ -22,6 +22,28 @@ const appServer = () => {
 
         return eventModel;
       });
+      this.patch('/api/event/:eventId/join', (schema, request) => {
+        const {eventId} = request.params;
+        const eventModel = schema.events.find(parseInt(eventId, 10));
+
+        eventModel.update({
+          id: eventId,
+          status: 'going',
+        });
+
+        return eventModel.attrs;
+      });
+      this.patch('/api/event/:eventId/leave', (schema, request) => {
+        const {eventId} = request.params;
+        const eventModel = schema.events.find(parseInt(eventId, 10));
+
+        eventModel.update({
+          id: eventId,
+          status: 'ignore',
+        });
+
+        return eventModel.attrs;
+      });
     },
   });
 };
