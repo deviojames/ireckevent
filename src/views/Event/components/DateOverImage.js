@@ -27,7 +27,7 @@ const Month = styled.Text`
 const DateOverImage = ({imageUrl, date, month}) => (
   <ImageBackground
     source={{uri: imageUrl}}
-    resizeMode={FastImage.resizeMode.contain}>
+    resizeMode={FastImage.resizeMode.cover}>
     <Date>{date}</Date>
     <Month>{month.toUpperCase()}</Month>
   </ImageBackground>

@@ -98,7 +98,7 @@ const EventDetail = ({route}) => {
             uri: url.protocolPrefix(image),
             priority: FastImage.priority.normal,
           }}
-          resizeMode={FastImage.resizeMode.contain}
+          resizeMode={FastImage.resizeMode.cover}
         />
       ) : null}
       <Content>

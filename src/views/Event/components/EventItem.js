@@ -83,7 +83,7 @@ const EventItem = ({
                     priority: FastImage.priority.normal,
                   }}
                   key={`member-${title}-${member.id}`}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                 />
               );
             })}
