@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {ScrollView, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import {
   fetchJoinEvent,
   fetchLeaveEvent,
   selectEventData,
+  selectEventDataStatus,
 } from '../../redux/slices/eventSlice';
 import {check} from '../../utils';
 import EventItem from './components/EventItem';
@@ -34,8 +35,10 @@ const NoEventText = styled.Text``;
 const Event = ({navigation}) => {
   const dispatch = useDispatch();
   const eventData = useSelector(selectEventData);
+  const eventDataStatus = useSelector(selectEventDataStatus);
 
   const [text, setText] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   const [searchEventData, setSearchEventData] = useState([]);
   const [eventDataOnToday, setEventDataOnToday] = useState([]);
   const [eventDataOnThisWeek, setEventDataOnThisWeek] = useState([]);
@@ -75,6 +78,14 @@ const Event = ({navigation}) => {
     setSearchEventData(filteredSearchEvent);
   }, [eventData, text]);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(fetchEvent());
+    if (eventDataStatus === 'succeeded') {
+      setRefreshing(false);
+    }
+  }, [dispatch, eventDataStatus]);
+
   function onJoinEvent(eventId) {
     dispatch(fetchJoinEvent({eventId}));
   }
@@ -87,7 +98,10 @@ const Event = ({navigation}) => {
     <>
       <SearchInput textHandler={[text, setText]} />
       {text === '' ? (
-        <StyledScrollView>
+        <StyledScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           {!check.isArrayEmpty(eventDataOnToday) ? (
             <EventSection title="today">
               {eventDataOnToday?.map(event => {
