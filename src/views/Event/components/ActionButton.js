@@ -15,11 +15,11 @@ const ActionContainer = styled.View`
 `;
 
 // -- MAIN
-const ActionButton = ({status}) => {
+const ActionButton = ({eventId, status, onJoinEvent, onLeaveEvent}) => {
   if (status === 'going') {
     return (
       <ActionContainer>
-        <StyledButton iconName="done" color="#fdce08">
+        <StyledButton iconName="done" color="#fdce08" onPress={onLeaveEvent}>
           Going
         </StyledButton>
       </ActionContainer>
@@ -28,7 +28,7 @@ const ActionButton = ({status}) => {
   if (status === 'ignore') {
     return (
       <ActionContainer>
-        <StyledButton iconName="done" color="#833594">
+        <StyledButton iconName="clear" color="#c8c7cd" onPress={onJoinEvent}>
           Ignore
         </StyledButton>
       </ActionContainer>
@@ -36,8 +36,9 @@ const ActionButton = ({status}) => {
   }
   return (
     <ActionContainer>
-      <StyledButton>Going</StyledButton>
+      <StyledButton onPress={onJoinEvent}>Going</StyledButton>
       <StyledButton
+        onPress={() => onLeaveEvent(eventId)}
         styled={css`
           margin-left: 10px;
         `}>
@@ -49,10 +50,14 @@ const ActionButton = ({status}) => {
 
 ActionButton.propTypes = {
   status: PropTypes.string,
+  onJoinEvent: PropTypes.func,
+  onLeaveEvent: PropTypes.func,
 };
 
 ActionButton.defaultProps = {
   status: 'none',
+  onJoinEvent: () => {},
+  onLeaveEvent: () => {},
 };
 
 export default ActionButton;

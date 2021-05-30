@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import {ScrollView, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  fetchJoinEvent,
+  fetchLeaveEvent,
   fetchSelectedEvent,
   selectSelectedEventData,
   selectSelectedEventDataStatus,
@@ -40,6 +42,8 @@ const EventImage = styled.Image`
 const TitleContainer = styled.View`
   background-color: #ffffff;
   padding: 5px;
+
+  border-radius: 10px;
 `;
 
 const Content = styled.View`
@@ -48,14 +52,15 @@ const Content = styled.View`
 
 const DescriptionContainer = styled.View`
   background-color: #ffffff;
+
   margin-top: 10px;
   padding: 5px;
+
+  border-radius: 10px;
 `;
 
 const ActionButtonContainer = styled.View`
-  align-items: center;
-
-  margin-top: 10px;
+  align-items: flex-start;
 `;
 
 // -- MAIN
@@ -70,6 +75,14 @@ const EventDetail = ({route}) => {
     dispatch(fetchSelectedEvent({eventId: eventId}));
   }, [dispatch, eventId]);
 
+  function onJoinEvent() {
+    dispatch(fetchJoinEvent({eventId}));
+  }
+
+  function onLeaveEvent(id) {
+    dispatch(fetchLeaveEvent({eventId}));
+  }
+
   const {title, image, description, dateTime, status} = selectedEventData;
 
   if (selectedEventDataStatus === 'loading') {
@@ -79,13 +92,17 @@ const EventDetail = ({route}) => {
   return (
     <Container>
       {image ? <EventImage source={{uri: url.protocolPrefix(image)}} /> : null}
-      <ActionButtonContainer>
-        <ActionButton status={status} />
-      </ActionButtonContainer>
       <Content>
         <TitleContainer>
           <EventTitle>{title}</EventTitle>
           <DateTime>{moment(dateTime).format('DD MMM YY hh:mm A')}</DateTime>
+          <ActionButtonContainer>
+            <ActionButton
+              status={status}
+              onJoinEvent={onJoinEvent}
+              onLeaveEvent={onLeaveEvent}
+            />
+          </ActionButtonContainer>
         </TitleContainer>
         <DescriptionContainer>
           <Title>Description</Title>

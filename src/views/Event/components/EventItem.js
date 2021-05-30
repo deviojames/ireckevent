@@ -39,7 +39,7 @@ const ExtraAttendees = styled.Text`
 `;
 
 const DateTimeText = styled.Text`
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 const Thumbnail = styled.Image`
@@ -54,8 +54,13 @@ const Thumbnail = styled.Image`
 `;
 
 // -- MAIN
-const EventItem = ({eventData, onPressEventItem}) => {
-  const {title, dateTime, image, members, status} = eventData;
+const EventItem = ({
+  eventData,
+  onPressEventItem,
+  onJoinEvent,
+  onLeaveEvent,
+}) => {
+  const {id, title, dateTime, image, members, status} = eventData;
 
   return (
     <TouchableOpacity onPress={() => onPressEventItem()}>
@@ -83,8 +88,8 @@ const EventItem = ({eventData, onPressEventItem}) => {
           </AttendeesContainer>
           <ActionButton
             status={status}
-            // unattended={}
-            // attend={}
+            onJoinEvent={() => onJoinEvent(id)}
+            onLeaveEvent={() => onLeaveEvent(id)}
           />
         </InfoContainer>
       </Container>
@@ -105,6 +110,8 @@ EventItem.propTypes = {
   ),
   status: PropTypes.string,
   onPressEventItem: PropTypes.func,
+  onJoinEvent: PropTypes.func,
+  onLeaveEvent: PropTypes.func,
 };
 
 EventItem.defaultProps = {
@@ -115,6 +122,8 @@ EventItem.defaultProps = {
   members: [],
   status: 'none',
   onPressEventItem: () => {},
+  onJoinEvent: () => {},
+  onLeaveEvent: () => {},
 };
 
 export default EventItem;

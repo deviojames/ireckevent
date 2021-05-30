@@ -3,7 +3,12 @@ import {ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
-import {fetchEvent, selectEventData} from '../../redux/slices/eventSlice';
+import {
+  fetchEvent,
+  fetchJoinEvent,
+  fetchLeaveEvent,
+  selectEventData,
+} from '../../redux/slices/eventSlice';
 import {check} from '../../utils';
 import EventItem from './components/EventItem';
 import EventSection from './components/EventSection';
@@ -41,24 +46,26 @@ const Event = ({navigation}) => {
   }, [dispatch]);
 
   useEffect(() => {
-    const filteredDataOnToday = eventData?.filter(event =>
-      moment(event.dateTime).isSame(moment(), 'day'),
-    );
+    if (!check.isArrayEmpty(eventData)) {
+      const filteredDataOnToday = eventData?.filter(event =>
+        moment(event.dateTime).isSame(moment(), 'day'),
+      );
 
-    const filteredDataOnThisWeek = eventData?.filter(
-      event =>
-        moment(event.dateTime).isSame(moment(), 'week') &&
-        moment(event.dateTime).isSame(moment(), 'day') === false,
-    );
-    const filteredDataOnLater = eventData?.filter(
-      event =>
-        moment(event.dateTime).isSame(moment(), 'day') === false &&
-        moment(event.dateTime).isSame(moment(), 'week') === false,
-    );
+      const filteredDataOnThisWeek = eventData?.filter(
+        event =>
+          moment(event.dateTime).isSame(moment(), 'week') &&
+          moment(event.dateTime).isSame(moment(), 'day') === false,
+      );
+      const filteredDataOnLater = eventData?.filter(
+        event =>
+          moment(event.dateTime).isSame(moment(), 'day') === false &&
+          moment(event.dateTime).isSame(moment(), 'week') === false,
+      );
 
-    setEventDataOnToday(filteredDataOnToday);
-    setEventDataOnThisWeek(filteredDataOnThisWeek);
-    setEventDataOnLater(filteredDataOnLater);
+      setEventDataOnToday(filteredDataOnToday);
+      setEventDataOnThisWeek(filteredDataOnThisWeek);
+      setEventDataOnLater(filteredDataOnLater);
+    }
   }, [eventData]);
 
   useEffect(() => {
@@ -67,6 +74,14 @@ const Event = ({navigation}) => {
     );
     setSearchEventData(filteredSearchEvent);
   }, [eventData, text]);
+
+  function onJoinEvent(eventId) {
+    dispatch(fetchJoinEvent({eventId}));
+  }
+
+  function onLeaveEvent(eventId) {
+    dispatch(fetchLeaveEvent({eventId}));
+  }
 
   return (
     <>
@@ -86,6 +101,8 @@ const Event = ({navigation}) => {
                         title: event.title,
                       })
                     }
+                    onJoinEvent={onJoinEvent}
+                    onLeaveEvent={onLeaveEvent}
                   />
                 );
               })}
@@ -104,6 +121,8 @@ const Event = ({navigation}) => {
                         title: event.title,
                       })
                     }
+                    onJoinEvent={onJoinEvent}
+                    onLeaveEvent={onLeaveEvent}
                   />
                 );
               })}
@@ -122,6 +141,8 @@ const Event = ({navigation}) => {
                         title: event.title,
                       })
                     }
+                    onJoinEvent={onJoinEvent}
+                    onLeaveEvent={onLeaveEvent}
                   />
                 );
               })}
@@ -147,6 +168,8 @@ const Event = ({navigation}) => {
                       title: event.title,
                     })
                   }
+                  onJoinEvent={onJoinEvent}
+                  onLeaveEvent={onLeaveEvent}
                 />
               );
             })}
