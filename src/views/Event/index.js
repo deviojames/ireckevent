@@ -26,11 +26,12 @@ const StyledScrollView = styled(ScrollView)`
   background-color: #f5f5f5;
 `;
 
-const NoEventContainer = styled.View`
+const MessageContainer = styled.View`
   align-items: center;
+  padding: 5px;
 `;
 
-const NoEventText = styled.Text``;
+const Message = styled.Text``;
 
 const Event = ({navigation}) => {
   const dispatch = useDispatch();
@@ -93,7 +94,6 @@ const Event = ({navigation}) => {
   function onLeaveEvent(eventId) {
     dispatch(fetchLeaveEvent({eventId}));
   }
-
   return (
     <>
       <SearchInput textHandler={[text, setText]} />
@@ -102,6 +102,11 @@ const Event = ({navigation}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
+          {eventDataStatus === 'failed' ? (
+            <MessageContainer>
+              <Message>Error, Please try agin.</Message>
+            </MessageContainer>
+          ) : null}
           {!check.isArrayEmpty(eventDataOnToday) ? (
             <EventSection title="today">
               {eventDataOnToday?.map(event => {
@@ -167,9 +172,9 @@ const Event = ({navigation}) => {
         <StyledScrollView>
           <EventSection title="search">
             {searchEventData.length === 0 ? (
-              <NoEventContainer>
-                <NoEventText>No events with this name.</NoEventText>
-              </NoEventContainer>
+              <MessageContainer>
+                <Message>No events with this name.</Message>
+              </MessageContainer>
             ) : null}
             {searchEventData?.map(event => {
               return (
