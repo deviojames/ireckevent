@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Axios from 'axios';
+import moment from 'moment';
 
 // -- CONSTANT
 const initialState = {
@@ -8,10 +9,14 @@ const initialState = {
   status: {
     eventData: 'idle',
     selectedEventData: 'idle',
+    joinEvent: 'idle',
+    leaveEvent: 'idle',
   },
   error: {
     eventData: '',
     selectedEventData: '',
+    joinEvent: '',
+    leaveEvent: '',
   },
 };
 
@@ -50,7 +55,8 @@ export const fetchJoinEvent = createAsyncThunk(
       return null;
     }
 
-    const response = await Axios.get(requestUrl);
+    const response = await Axios.patch(requestUrl);
+
     return response;
   },
 );
@@ -58,13 +64,14 @@ export const fetchJoinEvent = createAsyncThunk(
 export const fetchLeaveEvent = createAsyncThunk(
   'event/fetchLeaveEvent',
   async ({eventId}) => {
-    const requestUrl = `/api/event/${eventId}/join`;
+    const requestUrl = `/api/event/${eventId}/leave`;
 
     if (!requestUrl) {
       return null;
     }
 
-    const response = await Axios.get(requestUrl);
+    const response = await Axios.patch(requestUrl);
+
     return response;
   },
 );
@@ -96,7 +103,12 @@ export const eventSlice = createSlice({
     },
     [fetchEvent.fulfilled]: (state, action) => {
       state.status.eventData = 'succeeded';
-      state.eventData = action.payload.data;
+      // sort event data by date
+      state.eventData = action.payload.data.sort(
+        (a, b) =>
+          moment(a.dateTime).format('YYYYMMDD') -
+          moment(b.dateTime).format('YYYYMMDD'),
+      );
     },
     [fetchEvent.rejected]: (state, action) => {
       state.status.eventData = 'failed';
@@ -113,12 +125,46 @@ export const eventSlice = createSlice({
       state.status.selectedEventData = 'failed';
       state.error.selectedEventData = action.error.message;
     },
-    [fetchJoinEvent.pending]: (state, action) => {},
-    [fetchJoinEvent.fulfilled]: (state, action) => {},
-    [fetchJoinEvent.rejected]: (state, action) => {},
-    [fetchLeaveEvent.pending]: (state, action) => {},
-    [fetchLeaveEvent.fulfilled]: (state, action) => {},
-    [fetchLeaveEvent.rejected]: (state, action) => {},
+    [fetchJoinEvent.pending]: (state, action) => {
+      state.status.joinEvent = 'loading';
+    },
+    [fetchJoinEvent.fulfilled]: (state, action) => {
+      state.status.joinEvent = 'succeeded';
+      // replace event data from response
+      const replacedData = state.eventData.map(event => {
+        if (event.id === action.payload.data.id) {
+          return action.payload.data;
+        }
+        return event;
+      });
+
+      state.eventData = replacedData;
+      state.selectedEventData = action.payload.data;
+    },
+    [fetchJoinEvent.rejected]: (state, action) => {
+      state.status.joinEvent = 'failed';
+      state.error.joinEvent = action.error.message;
+    },
+    [fetchLeaveEvent.pending]: (state, action) => {
+      state.status.leaveEvent = 'loading';
+    },
+    [fetchLeaveEvent.fulfilled]: (state, action) => {
+      state.status.leaveEvent = 'succeeded';
+      // replace event data from response
+      const replacedData = state.eventData.map(event => {
+        if (event.id === action.payload.data.id) {
+          return action.payload.data;
+        }
+        return event;
+      });
+
+      state.eventData = replacedData;
+      state.selectedEventData = action.payload.data;
+    },
+    [fetchLeaveEvent.rejected]: (state, action) => {
+      state.status.leaveEvent = 'failed';
+      state.error.leaveEvent = action.error.message;
+    },
   },
 });
 

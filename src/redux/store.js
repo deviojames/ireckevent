@@ -29,4 +29,4 @@ export const persistor = persistStore(store);
 export default store;
 
 // reset the store
-persistor.purge();
+// persistor.purge();
