@@ -7,7 +7,6 @@ export default Factory.extend({
   title() {
     return faker.lorem.words();
   },
-
   dateTime() {
     return moment()
       .add(faker.datatype.number({min: 0, max: 15}), 'day')
@@ -17,12 +16,12 @@ export default Factory.extend({
     return faker.lorem.paragraph();
   },
   image() {
-    return faker.image.city();
+    return faker.image.image();
   },
   members() {
     return createArrayWithNumbers(randInt(1, 50)).map((_, index) => ({
       id: index + 1,
-      photo: faker.image.people(),
+      photo: faker.image.avatar(),
     }));
   },
   status() {
