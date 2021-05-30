@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import {ScrollView, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 import {
   fetchJoinEvent,
   fetchLeaveEvent,
@@ -34,7 +35,7 @@ const Description = styled.Text`
   font-size: 16px;
 `;
 
-const EventImage = styled.Image`
+const EventImage = styled(FastImage)`
   width: 100%;
   height: 300px;
 `;
@@ -91,7 +92,15 @@ const EventDetail = ({route}) => {
 
   return (
     <Container>
-      {image ? <EventImage source={{uri: url.protocolPrefix(image)}} /> : null}
+      {image ? (
+        <EventImage
+          source={{
+            uri: url.protocolPrefix(image),
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      ) : null}
       <Content>
         <TitleContainer>
           <EventTitle>{title}</EventTitle>

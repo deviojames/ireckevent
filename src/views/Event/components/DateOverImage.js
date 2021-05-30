@@ -1,10 +1,8 @@
 import React from 'react';
-import {ImageBackground, Text} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 
-const Background = styled(ImageBackground).attrs({
-  resizeMode: 'cover',
-})`
+const ImageBackground = styled(FastImage)`
   justify-content: center;
   align-items: center;
 
@@ -12,14 +10,14 @@ const Background = styled(ImageBackground).attrs({
   width: 120px;
 `;
 
-const Date = styled(Text)`
+const Date = styled.Text`
   color: #ffffff;
 
   font-size: 52px;
   font-weight: 700;
 `;
 
-const Month = styled(Text)`
+const Month = styled.Text`
   color: #ffffff;
 
   font-size: 24px;
@@ -27,10 +25,12 @@ const Month = styled(Text)`
 `;
 
 const DateOverImage = ({imageUrl, date, month}) => (
-  <Background source={{uri: imageUrl}}>
+  <ImageBackground
+    source={{uri: imageUrl}}
+    resizeMode={FastImage.resizeMode.contain}>
     <Date>{date}</Date>
     <Month>{month.toUpperCase()}</Month>
-  </Background>
+  </ImageBackground>
 );
 
 export default DateOverImage;

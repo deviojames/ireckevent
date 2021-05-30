@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styled from 'styled-components';
 import moment from 'moment';
 import DateOverImage from './DateOverImage';
@@ -42,7 +43,7 @@ const DateTimeText = styled.Text`
   font-size: 14px;
 `;
 
-const Thumbnail = styled.Image`
+const Avatar = styled(FastImage)`
   width: 35px;
   height: 35px;
 
@@ -76,9 +77,13 @@ const EventItem = ({
           <AttendeesContainer>
             {members.slice(0, 3).map(member => {
               return (
-                <Thumbnail
-                  source={{uri: url.protocolPrefix(member.photo)}}
+                <Avatar
+                  source={{
+                    uri: url.protocolPrefix(member.photo),
+                    priority: FastImage.priority.normal,
+                  }}
                   key={`member-${title}-${member.id}`}
+                  resizeMode={FastImage.resizeMode.contain}
                 />
               );
             })}

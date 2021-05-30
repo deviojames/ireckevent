@@ -43,12 +43,10 @@ const EventSection = ({title, children}) => {
 
 EventSection.propTypes = {
   title: PropTypes.string,
-  children: PropTypes.oneOfType(PropTypes.element),
 };
 
 EventSection.defaultProps = {
   title: '',
-  children: null,
 };
 
 export default EventSection;
