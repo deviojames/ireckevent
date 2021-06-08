@@ -1,4 +1,4 @@
-# Event application
+# Event application for Ireckonu assignment
 - use MirageJS to mock API server.
 - Redux
   - redux-thunk
@@ -37,4 +37,6 @@ or
 $ npx jest --coverage
 ```
 
-Enjoy!🥳
+Note:
+ถ้าเก่งก็ไม่เท่าไหร่หรอก ถ้าไม่รู้อะไรก็จะเห็นได้ว่า พวกเขาจะมองคุณเป็นตัวตลก
+
