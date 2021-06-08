@@ -38,5 +38,5 @@ $ npx jest --coverage
 ```
 
 Note:
-HAPPY TO FAILED :D
+HAPPY FOR F
 
