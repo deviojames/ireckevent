@@ -1,4 +1,4 @@
-# Event application for assignment
+# Event application
 - use MirageJS to mock API server.
 - Redux
   - redux-thunk
